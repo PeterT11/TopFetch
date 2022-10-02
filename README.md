@@ -1,16 +1,16 @@
 # TopFetch
 Fetch  data from server as soon as when page script start and before rendering 
 
-## purpose
+## Purpose
 Sometimes you want to get the data from a server ASAP, but you also want to display some default data to user instead of a loading spinner. You can start fetching at the top of your component file and then rendering page with default data. When data is coming, page will automatically re-rendering.
 
 ## Usage
-1. import file in your component:
+1. Import file in your component:
 ```
 import { startTopFetch, useTopFetch } from "./topFetch";
 ```
 
-2. call startTopFetch before your component function and pass a callback function, callback function type: ()=>Promise<any>
+2. Call startTopFetch before your component function and pass a callback function, callback function type: ()=>Promise<any>
 ```
 const myTopFetch = startTopFetch(fakeFetch)
 ```
