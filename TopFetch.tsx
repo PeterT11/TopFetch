@@ -17,7 +17,9 @@ interface ReturnFromTopFetch {
 type StartTopFetch = (fetcher: Fetcher) => ReturnFromTopFetch
 
 export const startTopFetch = function (fetcher: Fetcher) {
-    if(typeof window === 'undefined') return null  //return null if run at server side. it will do nothing untill re-render at browser side
+    if (typeof window === 'undefined') {
+        return null
+    }
     let receivedData: any = null
     let listener: Listener[] = []
     function addListener(cb: Listener): number {
@@ -31,34 +33,33 @@ export const startTopFetch = function (fetcher: Fetcher) {
             return listener.length - 1
         }
     }
+    //Remove Listener, prevent useEffect be called multitimes
     function removeListener(id: number) {
 
-        console.log("before remove listener: ", id)
         if (id && id >= 0 && id < listener.length) {
             listener.splice(id, 1)
         }
     }
+
     let res = fetcher()
     if (typeof res.then === "undefined") {
-        receivedData = res
+        console.log("The function must be return a promise and pass data you wanted when promise is fullfilled")
+        listener.forEach((cb) => cb(false, null))
     }
-    else {
+    else
         res.then(
             (data: any) => {
                 receivedData = data
-            },
-        ).finally(() => {
-            listener.forEach((cb) => cb(false, receivedData))
-        })
-
-    }
+                listener.forEach((cb) => cb(false, receivedData))
+            })
     return { addListener, removeListener }
 } as StartTopFetch
 
 export const useTopFetch = (listener: ReturnFromTopFetch): TopFetch => {
+    // if(!listener) return [false,null]
     const [loadingStatus, setLoadingStatus] = useState(true)
     useEffect(() => {
-        if(!listener) return //Null may because pre-render at server side.
+        if (!listener) return
         const id = listener.addListener((v: boolean, data: any) => {
             setLoadingStatus(v)
             receivedData = data
