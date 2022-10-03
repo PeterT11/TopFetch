@@ -43,7 +43,7 @@ export const startTopFetch = function (fetcher: Fetcher) {
         receivedData = res
     }
     else {
-        fetcher().then(
+        res.then(
             (data: any) => {
                 receivedData = data
             },
