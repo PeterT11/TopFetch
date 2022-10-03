@@ -17,6 +17,7 @@ interface ReturnFromTopFetch {
 type StartTopFetch = (fetcher: Fetcher) => ReturnFromTopFetch
 
 export const startTopFetch = function (fetcher: Fetcher) {
+    if(typeof window === 'undefined') return null  //return null if run at server side. it will do nothing untill re-render at browser side
     let receivedData: any = null
     let listener: Listener[] = []
     function addListener(cb: Listener): number {
@@ -55,9 +56,9 @@ export const startTopFetch = function (fetcher: Fetcher) {
 } as StartTopFetch
 
 export const useTopFetch = (listener: ReturnFromTopFetch): TopFetch => {
-
     const [loadingStatus, setLoadingStatus] = useState(true)
     useEffect(() => {
+        if(!listener) return //Null may because pre-render at server side.
         const id = listener.addListener((v: boolean, data: any) => {
             setLoadingStatus(v)
             receivedData = data
