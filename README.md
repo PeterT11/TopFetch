@@ -1,5 +1,5 @@
 # TopFetch
-Fetch  data from server as soon as when page script start and before rendering 
+Fetch  data from server as soon as when page script start and before rendering. Support Nextjs server side rendering.
 
 ## Purpose
 Sometimes you want to get the data from a server ASAP, but you also want to display some default data to user instead of a loading spinner. You can start fetching at the top of your component file and then rendering page with default data. When data is coming, page will automatically re-rendering.
